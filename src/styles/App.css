@@ -1,0 +1,14 @@
+.searchbar {
+    height: 75px;
+    width: 100vw;
+    background: rgba(0, 128, 128, 0.616);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchbar__items {
+    width: 800px;
+    display: flex;
+    justify-content: space-between;
+}
