@@ -1,3 +1,9 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .searchbar {
     height: 75px;
     width: 100vw;
@@ -8,7 +14,35 @@
 }
 
 .searchbar__items {
-    width: 800px;
+    width: 1030px;
     display: flex;
     justify-content: space-between;
+}
+
+.books-container {
+    max-width: 1080px;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+}
+
+.book {
+    width: 500px;
+    margin: 10px;
+    display: flex;
+    cursor: pointer;
+}
+
+.book > img {
+    width: 150px;
+}
+
+.book__items {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 15px;
+    justify-content: space-evenly;
 }
