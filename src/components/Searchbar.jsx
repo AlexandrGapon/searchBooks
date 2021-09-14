@@ -1,28 +1,22 @@
-import debounce from 'lodash.debounce'
-import React, { useRef, useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setQueryString } from '../store/reducers/searchReducer'
 import SearchButton from './UI/SearchButton/SearchButton'
 import SearchInput from './UI/SearchInput/SearchInput'
 
 const SearchBar = () => {
-    const [queryString, setQueryString] = useState('')
-
-    const search = useRef(
-        debounce(query => {
-            console.log(query)
-        }, 1000)
-    ).current
-
-    const handleChange = (e) => {
-        const value = e.target.value
-        setQueryString(value)
-        search(value)
-    }
+    const dispatch = useDispatch()
+    const queryString = useSelector(state => state.search.queryString)
 
     return (
         <div className='searchbar'>
             <div className='searchbar__items'>
-                <SearchInput placeholder='Введите название книги' value={queryString} onChange={handleChange} />
-                <SearchButton onClick={() => search(queryString)}>
+                <SearchInput
+                    placeholder='Введите название книги'
+                    value={queryString}
+                    onChange={(e) => dispatch(setQueryString(e.target.value))}
+                />
+                <SearchButton onClick={() => dispatch({ type: 'LOAD_BOOKS_WITH_BTN', payload: queryString })}>
                     Найти
                 </SearchButton>
             </div>
