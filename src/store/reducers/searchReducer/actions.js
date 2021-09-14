@@ -1,2 +1,3 @@
 export const SET_QUERY_STRING = "SET_QUERY_STRING"
 export const SET_IS_FETCHING = "SET_IS_FETCHING"
+export const FETCH_ERROR = "FETCH_ERROR"

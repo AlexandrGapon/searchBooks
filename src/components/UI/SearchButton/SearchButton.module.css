@@ -6,6 +6,7 @@
     font-size: 20px;
     border-radius: 7px;
     background-color: rgb(235, 235, 235);
+    outline: none;
 }
 
 .search__button:hover {

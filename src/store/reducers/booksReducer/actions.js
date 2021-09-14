@@ -1,0 +1,2 @@
+export const SET_BOOKS_ID = "SET_BOOKS_ID"
+export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE"

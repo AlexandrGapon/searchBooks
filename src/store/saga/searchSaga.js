@@ -1,35 +1,33 @@
 import { call, put, take, cancel, fork, delay } from 'redux-saga/effects'
-import { setIsFetching } from '../reducers/searchReducer'
+import { setFetchError, setIsFetching } from '../reducers/searchReducer'
 import { setBooksId } from '../reducers/booksReducer'
 import { SET_QUERY_STRING } from '../reducers/searchReducer/actions'
 
-export function* fetchBooksOnClick(payload, signal) {
+export function* fetchBooks(payload, signal, type) {
+    if (!payload) {
+        yield put(setBooksId([]))
+        return
+    }
+    if (type === SET_QUERY_STRING) {
+        yield delay(1000)
+    }
     yield put(setIsFetching(true))
-    const booksId = []
-    const response = yield call(fetch, `http://openlibrary.org/search.json?title=${payload}`, { signal })
-    const data = yield call([response, response.json])
-    data.docs.forEach(p => {
-        if (p.edition_key) {
-            booksId.push(...p.edition_key)
-        }
-    })
-    yield put(setBooksId(booksId))
-    yield put(setIsFetching(false))
-}
-
-export function* fetchBooksOnChange(payload, signal) {
-    yield delay(1000)
-    yield put(setIsFetching(true))
-    const booksId = []
-    const response = yield call(fetch, `http://openlibrary.org/search.json?title=${payload}`, { signal })
-    const data = yield call([response, response.json])
-    data.docs.forEach(p => {
-        if (p.edition_key) {
-            booksId.push(...p.edition_key)
-        }
-    })
-    yield put(setBooksId(booksId))
-    yield put(setIsFetching(false))
+    try {
+        const response = yield call(fetch, `http://openlibrary.org/search.json?title=${payload}`, { signal })
+        const data = yield call([response, response.json])
+        const booksId = []
+        data.docs.forEach(p => {
+            if (p.edition_key) {
+                booksId.push(...p.edition_key)
+            }
+        })
+        yield put(setBooksId(booksId))
+        yield put(setIsFetching(false))
+    }
+    catch(error) {
+        yield put(setFetchError(error))
+        yield put(setIsFetching(false))
+    }
 }
 
 
@@ -44,7 +42,7 @@ export function* loadOnClick() {
             yield cancel(task)
             abortController = new AbortController()
         }
-        task = yield fork(fetchBooksOnClick, action.payload, abortController.signal)
+        task = yield fork(fetchBooks, action.payload, abortController.signal, action.type)
     }
 }
 
@@ -59,6 +57,6 @@ export function* loadOnChange() {
             yield cancel(task)
             abortController = new AbortController()
         }
-        task = yield fork(fetchBooksOnChange, action.payload, abortController.signal)
+        task = yield fork(fetchBooks, action.payload, abortController.signal, action.type)
     }
 }
