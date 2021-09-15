@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setQueryString } from '../store/reducers/searchReducer'
+import { LOAD_BOOKS_WITH_BTN, SET_QUERY_STRING } from '../store/reducers/searchReducer/actions'
 import SearchButton from './UI/SearchButton/SearchButton'
 import SearchInput from './UI/SearchInput/SearchInput'
 
@@ -14,9 +14,9 @@ const SearchBar = () => {
                 <SearchInput
                     placeholder='Введите название книги'
                     value={queryString}
-                    onChange={(e) => dispatch(setQueryString(e.target.value))}
+                    onChange={(e) => dispatch({ type: SET_QUERY_STRING, payload: e.target.value })}
                 />
-                <SearchButton onClick={() => dispatch({ type: 'LOAD_BOOKS_WITH_BTN', payload: queryString })}>
+                <SearchButton onClick={() => dispatch({ type: LOAD_BOOKS_WITH_BTN, payload: queryString })}>
                     Найти
                 </SearchButton>
             </div>

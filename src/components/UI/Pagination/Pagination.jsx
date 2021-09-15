@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { setCurrentPage } from '../../../store/reducers/booksReducer'
+import { SET_CURRENT_PAGE } from '../../../store/reducers/booksReducer/actions'
 import { createPages } from '../../../utils/pagesCreator'
 import cl from './Pagination.module.css'
 
@@ -22,7 +22,7 @@ const Pagination = ({ pagesItems, currentPage, perPage }) => {
             {pages.map(p => (<span 
                             key={p}
                             className={p === currentPage ? cl.pagination__item_current : cl.pagination__item}
-                            onClick={() => dispatch(setCurrentPage(p))}
+                            onClick={() => dispatch({ type: SET_CURRENT_PAGE, payload: p })}
                             >{p}</span>))}
         </div>
     )

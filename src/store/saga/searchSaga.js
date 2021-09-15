@@ -1,7 +1,6 @@
 import { call, put, take, cancel, fork, delay } from 'redux-saga/effects'
-import { setFetchError, setIsFetching } from '../reducers/searchReducer'
 import { setBooksId } from '../reducers/booksReducer'
-import { SET_QUERY_STRING } from '../reducers/searchReducer/actions'
+import { FETCH_ERROR, LOAD_BOOKS_WITH_BTN, SET_IS_FETCHING, SET_QUERY_STRING } from '../reducers/searchReducer/actions'
 
 export function* fetchBooks(payload, signal, type) {
     if (!payload) {
@@ -11,7 +10,7 @@ export function* fetchBooks(payload, signal, type) {
     if (type === SET_QUERY_STRING) {
         yield delay(1000)
     }
-    yield put(setIsFetching(true))
+    yield put({ type: SET_IS_FETCHING, payload: true })
     try {
         const response = yield call(fetch, `http://openlibrary.org/search.json?title=${payload}`, { signal })
         const data = yield call([response, response.json])
@@ -22,41 +21,25 @@ export function* fetchBooks(payload, signal, type) {
             }
         })
         yield put(setBooksId(booksId))
-        yield put(setIsFetching(false))
+        yield put({ type: SET_IS_FETCHING, payload: false })
     }
-    catch(error) {
-        yield put(setFetchError(error))
-        yield put(setIsFetching(false))
+    catch (error) {
+        yield put({ type: FETCH_ERROR, payload: error })
+        yield put({ type: SET_IS_FETCHING, payload: false })
     }
 }
 
-
-export function* loadOnClick() {
+export function* loadOnAction() {
     let task
     let abortController = new AbortController()
 
     while (true) {
-        const action = yield take('LOAD_BOOKS_WITH_BTN')
+        const action = yield take([SET_QUERY_STRING, LOAD_BOOKS_WITH_BTN])
         if (task) {
             abortController.abort()
             yield cancel(task)
             abortController = new AbortController()
         }
-        task = yield fork(fetchBooks, action.payload, abortController.signal, action.type)
-    }
-}
-
-export function* loadOnChange() {
-    let task
-    let abortController = new AbortController()
-
-    while (true) {
-        const action = yield take(SET_QUERY_STRING)
-        if (task) {
-            abortController.abort()
-            yield cancel(task)
-            abortController = new AbortController()
-        }
-        task = yield fork(fetchBooks, action.payload, abortController.signal, action.type)
+        task = yield fork(fetchBooks, action.payload.trim(), abortController.signal, action.type)
     }
 }

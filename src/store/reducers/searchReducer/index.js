@@ -28,7 +28,3 @@ export const searchReducer = (state = initialState, action) => {
             return state
     }
 }
-
-export const setQueryString = (string) => ({ type: SET_QUERY_STRING, payload: string })
-export const setIsFetching = (isFetching) => ({ type: SET_IS_FETCHING, payload: isFetching })
-export const setFetchError = (error) => ({ type: FETCH_ERROR, payload: error })

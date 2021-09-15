@@ -9,6 +9,7 @@ const Book = ({ author, title, cover, isbn, ...props }) => {
             <div className='book__items'>
                 <span className='book__author'>Author: {author}</span>
                 <span className='book__title'>Title: {title}</span>
+                <span className='book__title'>ISBN: {isbn}</span>
             </div>
         </div>
     )
